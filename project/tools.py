@@ -25,7 +25,9 @@ def now():
 			result += i
 	return hex(int(result))
 
-print(now())
+
+def sort_frame(array):
+    sorted(array, key=lambda x:x['number'])
 '''
 text1 = text.encode('ascii')       字符串转换为ascii字节码
 binascii.b2a_hex(text1)            以16进制形式表示
