@@ -12,13 +12,13 @@ from tools import charArray_hex, sort_frame
 '''
 
 
+
 def process(file):
     '''按照帧的编号排序帧'''
     lists = []
     head = [bytes([0x44]), bytes([0x48]), bytes([0x41]), bytes([0x56])]
     with open(file, 'rb') as f:
         index = 0
-        num = 0
         while True:
             b = f.read(1)
             if not b:
@@ -32,20 +32,18 @@ def process(file):
                 index = 0
                 bs = f.read(16)
                 lists.append(create_dict(bs))
-                num += 1
-            if num == 1000:
-                break
     sort_frame(lists)
     return lists
 
 
 
-def create_dict(b):  # 通篇都是捉急
+def create_dict(b):  
     frame = {}
     bytess = [hex(x) for x in bytes(b)]
     frame['number'] = charArray_hex(bytess[4:8])
     frame['size'] = charArray_hex(bytess[8:12])
     frame['datetime'] = charArray_hex(bytess[-4:])
+     
     return frame
 
 
