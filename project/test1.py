@@ -13,7 +13,7 @@ from tools import charArray_hex
 
 
 
-def sort_frame(file):
+async def sort_frame(file):
     '''按照帧的编号排序帧'''
     lists = []
     head = [bytes([0x44]), bytes([0x48]), bytes([0x41]), bytes([0x56])]
@@ -31,18 +31,16 @@ def sort_frame(file):
             if index == 4:
                 index = 0
                 bs = f.read(16)
-                lists.append(process(bs))
+                number, flag = process(bs)
+                lists.append(number)
     sorted(lists)
-    write_file(lists)
+    await write_file(lists)
+    return lists
 
 
 
 def process(b):  
-    #frame = {}
     b = [hex(x) for x in bytes(b)]
-    #frame['number'] = charArray_hex(bytess[4:8])
-    #frame['size'] = charArray_hex(bytess[8:12])
-    #frame['datetime'] = charArray_hex(bytess[-4:])
     '''
     判断是否在时间范围内
     if charArray_hex(bytes[-4:]) < ?:
@@ -51,22 +49,32 @@ def process(b):
         flag = False
     '''
 
-    return (charArray_hex(b[4:8]))
+    return (charArray_hex(b[4:8]), 1)
 
-
+'''
 def write_file(lists):
     if not lists:
         return
     with open('done.txt', 'w') as f:
         for i in lists:
-            f.write(i)
-
-
+            for key in i:
+                f.write(key + ':')
+                f.write(''.join(i[key]) + '\t')
+            f.write('\n')
+'''
+async def write_file(list):
+    with open('sort.txt', 'w') as f:
+        for i in list:
+            await f.write('serial number:' + i)
 
 
 if __name__ == "__main__":
     file = sys.argv[1]
     start = time.time()
-    sort_frame(file)
-    end = time.end()
-    print('消耗时间：', end-start)
+
+    loop = asyncio.get_event_loop()
+    task = sort_frame(file)
+    loop.run_until_complete(task)
+
+    end = time.time()
+    print('耗费时间：', end-start)

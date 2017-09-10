@@ -9,26 +9,20 @@ def charArray_hex(array, base=16):
     array.reverse()
     tmp = '0x'
     for i in array:
+        if len(i) == 3:
+            tmp += '0'
         tmp += i[2:]
     tmp = int(tmp, base=base)
     return hex(tmp)
 
 
 '''返回当前时间的正序16进制，用于筛选时段'''
-def now():
-	now_time = datetime.now()
-	c = str(now_time)[2:-7]
-	result = ''
-	for i in c:
-		t = ord(i)
-		if t > 47 and t < 58:
-			result += i
-	return hex(int(result))
+def Time(year, month, day, hour, minute, seconds):
+    pass
 
 
 def sort_frame(array):
     sorted(array, key=lambda x:x['number'])
-
 
 
 '''
